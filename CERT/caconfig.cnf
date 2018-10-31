@@ -1,0 +1,76 @@
+####################################################################
+[ ca ]
+default_ca      = CA_default    # The default ca section
+
+####################################################################
+[ CA_default ]
+dir							= . 							# Where everything is kept
+certs						= $dir/certs    				# Where the issued certs are kept
+crl_dir						= $dir/crl      				# Where the issued crl are kept
+database					= $dir/index.txt 				# Database index file
+new_certs_dir				= $dir/newcerts 				# Default place for new certs
+certificate					= $dir/RootCaCertificate.pem 	# The CA certificate
+serial						= $dir/serial 					# The current serial number
+crl							= $dir/crl.pem 					# The current CRL
+private_key					= $dir/RootCaKey.pem 			# The private key
+RANDFILE					= $dir/private/.rand 			# Private random number file
+
+x509_extensions				= certificate_extensions 		# Extensions to add to the cert
+
+# Extensions to add to a CRL. Note: Netscape Communicator chokes on V2 CRLs so this is commented out by default to leave a V1 CRL.
+# crl_extensions 	= crl_ext
+
+default_days				= 3650 							# How long to certify for
+default_crl_days			= 180 							# How long before next CRL
+default_md					= md5 							# which md to use
+preserve					= no 							# keep passed DN ordering
+
+# A few different ways of specifying how similar the request should look
+# For type CA, the listed attributes must be the same, and the optional and supplied fields are just that
+policy						= policy_match
+			
+# For the CA policy
+[ policy_match ]
+commonName					= supplied
+stateOrProvinceName			= supplied
+countryName					= supplied
+emailAddress				= supplied
+organizationName			= supplied
+organizationalUnitName		= optional
+
+# For the 'anything' policy
+# At this point, you must list all acceptable 'object' types
+[ policy_anything ]
+countryName					= optional
+stateOrProvinceName			= optional
+localityName				= optional
+organizationName			= optional
+organizationalUnitName		= optional
+commonName					= supplied
+emailAddress				= optional
+
+[ certificate_extensions ]
+basicConstraints			= CA:false
+
+[ req ]
+default_bits    			= 2048
+default_keyfile 			= rootkey.pem
+default_md      			= md5
+prompt 						= yes 
+distinguished_name 			= root_ca_distinguished_name
+x509_extensions 			= root_ca_extensions
+
+[ root_ca_distinguished_name ]
+commonName					= Common Name (e.g. server FQDN or YOUR name)
+commonName_default 			= Manny Jurr
+stateOrProvinceName			= State or Province Name (full name)
+stateOrProvinceName_default = California
+countryName 				= Country name (2 letter code)
+countryName_default 		= US
+emailAddress 				= Email Address
+emailAddress_default 		= manny.jurr@synergexpsg.com
+organizationName			= Organization Name (e.g. company)
+organizationName_default	= Synergex
+
+[ root_ca_extensions ]
+basicConstraints 			= CA:true
